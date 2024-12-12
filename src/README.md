@@ -1,11 +1,49 @@
-# Instruções de utilização
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-## Instalação do Site
+public enum ItemCode : int
+{
+    Red = 0,
+    Green = 1,
+    Blue = 2,
+    Yellow = 3,
+    Black = 4,
+}
 
-O site em HTML/CSS/JS é um projeto estático, logo pode ser utilizado tanto em servidores...
+public class CubeItem : MonoBehaviour
+{
+    public ItemCode code;
+    public AudioClip sound;
+    public Material color;
 
-## Histórico de versões
+    private AudioSource audioSource;
 
-### [0.1.0] - DD/MM/AA
-#### Adicionado
-- Adicionado ...
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = sound;
+        GetComponent<Renderer>().enabled = false;
+        GetComponent<Renderer>().material = color;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Table")
+        {
+            other.gameObject.GetComponent<Table>().OnItemAttached(this);
+            audioSource.Play();            
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Table")
+        {
+            other.gameObject.GetComponent<Table>().OnItemRemoved(this);
+        }
+    }
+
+
+
+}
