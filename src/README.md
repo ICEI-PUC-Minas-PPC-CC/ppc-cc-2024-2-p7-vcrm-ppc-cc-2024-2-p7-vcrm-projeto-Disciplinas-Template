@@ -2,48 +2,184 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemCode : int
+
+public enum GameStates : int
 {
-    Red = 0,
-    Green = 1,
-    Blue = 2,
-    Yellow = 3,
-    Black = 4,
+    Idle = 1,
+    PlayingSequence = 2,
+    ArrangeItem = 3,
 }
 
-public class CubeItem : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    public ItemCode code;
-    public AudioClip sound;
-    public Material color;
+    public static GameManager Instance;
 
-    private AudioSource audioSource;
+    public GameStates currentState;
+    
+    public List<Table> tables;
+    public List<GameObject> items;
+    public List<Material> colors;
+    public List<AudioClip> tones;
+    public AudioClip successSound;
 
-    private void Start()
+    public List<Transform> spawnPoints;
+
+    public int currentScore = 0;
+    public List<ItemCode> trueSequence = new List<ItemCode>();
+
+    public ScoreScreen scoreScreen;
+
+    private AudioSource audioSource; 
+
+    void Start()
     {
+        currentState = GameStates.Idle;
+        Instance = this;
         audioSource = GetComponent<AudioSource>();
-        audioSource.clip = sound;
-        GetComponent<Renderer>().enabled = false;
-        GetComponent<Renderer>().material = color;
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnButtonPressed()
     {
-        if (other.gameObject.tag == "Table")
+        if (currentState == GameStates.Idle)
         {
-            other.gameObject.GetComponent<Table>().OnItemAttached(this);
-            audioSource.Play();            
+            scoreScreen.UpdateScore(currentScore);
+            currentState = GameStates.PlayingSequence;
+            StartCoroutine(PlaySequence());
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void OnEmergencyButtonPressed() { 
+    
+       if (currentState == GameStates.ArrangeItem)
+       {
+            currentScore = currentScore - 1;
+            if (currentScore < 0)
+            {
+                currentScore = 0;
+            }
+            currentState = GameStates.Idle;
+            OnButtonPressed();
+       }
+    }
+
+    IEnumerator PlaySequence()
     {
-        if (other.gameObject.tag == "Table")
+        GenerateRandomSequence();
+
+        foreach (Table table in tables)
         {
-            other.gameObject.GetComponent<Table>().OnItemRemoved(this);
+            table.SetColor(GetColorByItemCode(ItemCode.Black));
+        }
+
+        MoveItemsToSpawnPosition();
+        yield return new WaitForSeconds(0.5f);
+
+        for (int i = 0; i < trueSequence.Count; i++)
+        {
+            ItemCode code = trueSequence[i];
+            tables[i].SetCode(code);
+            tables[i].SetColor(GetColorByItemCode(code));
+            audioSource.clip = GetToneByCode(code);
+            audioSource.Play();
+            
+            yield return new WaitForSeconds(1.0f);
+            tables[i].SetColor(GetColorByItemCode(ItemCode.Black));
+        }
+
+        currentState = GameStates.ArrangeItem;        
+    }
+
+    void MoveItemsToSpawnPosition()
+    {
+        List<Transform> positions = new List<Transform>(spawnPoints);
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            int idx = Random.Range(0, positions.Count);
+            Vector3 randomPosition = positions[idx].position;
+            positions.RemoveAt(idx);
+            items[i].transform.localPosition = randomPosition;
+            items[i].transform.localRotation = Quaternion.identity;
+            items[i].GetComponent<Renderer>().enabled = false;
         }
     }
 
+    public void OnRedButtonPressed()
+    {
+    items[0].GetComponent<Renderer>().enabled = true;
+    }
 
+    public void OnBlueButtonPressed()
+    {
+    items[2].GetComponent<Renderer>().enabled = true;
+    }
+
+    public void OnYellowButtonPressed()
+    {
+    items[3].GetComponent<Renderer>().enabled = true;
+    }
+
+    public void OnGreenButtonPressed()
+    {
+    items[1].GetComponent<Renderer>().enabled = true;
+    }   
+
+    public Material GetColorByItemCode(ItemCode code)
+    {
+        return colors[((int)code)];
+    }
+
+    public AudioClip GetToneByCode(ItemCode code)
+    {
+        return tones[((int)code)];
+    }
+
+    void GenerateRandomSequence()
+    {
+        trueSequence.Clear();
+
+        List<ItemCode> sequence = new List<ItemCode>();
+        sequence.Add(ItemCode.Red); 
+        sequence.Add(ItemCode.Green);
+        sequence.Add(ItemCode.Blue);
+        sequence.Add(ItemCode.Yellow);
+
+        while(sequence.Count > 0)
+        {
+            int idx = Random.Range(0, sequence.Count);
+            trueSequence.Add(sequence[idx]);
+            sequence.RemoveAt(idx);
+        }
+
+    }
+    public void CheckSequence()
+    {
+        bool success = true;
+
+        foreach(Table table in tables)
+        {
+            if (!table.HasTheCorrectItem())
+            {
+                success = false;
+            }
+        }
+
+        if (success)
+        {
+            audioSource.clip = successSound;
+            audioSource.Play();
+
+            foreach (Table table in tables)
+            {
+                table.SetColor(GetColorByItemCode(table.itemCode));
+            }
+
+            currentState = GameStates.Idle;
+
+            currentScore += 1;
+
+            scoreScreen.UpdateScore(currentScore);
+        }
+    }
 
 }
