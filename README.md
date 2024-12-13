@@ -26,6 +26,8 @@
 
 <li><a href="docs/12-Apresentação do Projeto.md"> Apresentação do Projeto</a></li>
 
+<li><a href="docs/4-Requisitos de Instalação.md"> Requisitos de Instalação</a></li>
+
 # Código
 
 <li><a href="src/README.md"> Código Fonte</a></li>
