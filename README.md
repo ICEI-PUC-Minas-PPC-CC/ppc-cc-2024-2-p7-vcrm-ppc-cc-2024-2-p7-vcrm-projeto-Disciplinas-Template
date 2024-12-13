@@ -1,41 +1,39 @@
-# TÍTULO DO PROJETO
+# Genius Simulator
 
 `PPC-CC: PUC Poços de Caldas - Ciência da Computação`
-`Disciplina: NOME DA DISCIPLINA`
-`2021 - Semestre 1`
+`Disciplina: Visão Computacional`
+`2024 - Semestre 2`
 
 ## Integrantes
 
-- Jeff Bezos
-- Bill Gates
-- Larry Ellison
-- Mark Zuckerberg
+- Marcello Almeida
+- Elson Oliveira
 
 ## Professor
 
-- Mestre Yoda
+- Will Machado
 
 # Documentação
-
-<ol>
 <li><a href="docs/1-Documentação de Contexto.md"> Documentação de Contexto</a></li>
-<li><a href="docs/2-Especificação do Projeto.md"> Especificação do Projeto</a></li>
-<li><a href="docs/3-Projeto de Interface.md"> Projeto de Interface</a></li>
-<li><a href="docs/4-Metodologia.md"> Metodologia</a></li>
-<li><a href="docs/5-Arquitetura da Solução.md"> Arquitetura da Solução</a></li>
-<li><a href="docs/6-Template padrão do Site.md"> Template padrão do Site</a></li>
-<li><a href="docs/7-Programação de Funcionalidades.md"> Programação de Funcionalidades</a></li>
-<li><a href="docs/8-Plano de Testes de Software.md"> Plano de Testes de Software</a></li>
-<li><a href="docs/9-Registro de Testes de Software.md"> Registro de Testes de Software</a></li>
-<li><a href="docs/10-Plano de Testes de Usabilidade.md"> Plano de Testes de Usabilidade</a></li>
-<li><a href="docs/11-Registro de Testes de Usabilidade.md"> Registro de Testes de Usabilidade</a></li>
+
+![image](https://github.com/user-attachments/assets/dcf9e148-4b74-4ecc-b8a4-c2ba48e0ccc1)
+
+![image](https://github.com/user-attachments/assets/5ac8bdce-f0b0-423d-bd5a-3c628bd617ba)
+  
+![image](https://github.com/user-attachments/assets/33b9ba45-22d5-41a8-adbe-a11e45d46c1e)
+
+![image](https://github.com/user-attachments/assets/28a8ef3c-554c-4ba5-8e39-571fbed1e29b)
+
 <li><a href="docs/12-Apresentação do Projeto.md"> Apresentação do Projeto</a></li>
-<li><a href="docs/13-Referências.md"> Referências</a></li>
-</ol>
+
 
 # Código
 
 <li><a href="src/README.md"> Código Fonte</a></li>
+
+# Requisitos de Instalação
+
+- Unity (2022.3.12f1)
 
 # Apresentação
 
